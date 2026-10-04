@@ -7,6 +7,7 @@ from datetime import datetime
 from lxml import etree
 
 from erpbrasil.base import misc
+from erpbrasil.edoc.ambiente import em_producao
 from erpbrasil.edoc.nfse import NFSe, ServicoNFSe
 
 try:
@@ -51,7 +52,7 @@ class Barueri(NFSe):
     def __init__(
         self, transmissao, ambiente, cidade_ibge, cnpj_prestador, im_prestador
     ):
-        if ambiente == "2":
+        if not em_producao(ambiente):
             self._url = "https://testeeiss.barueri.sp.gov.br/"
         else:
             self._url = "https://www.barueri.sp.gov.br/"

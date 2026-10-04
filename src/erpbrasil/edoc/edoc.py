@@ -9,6 +9,7 @@ from lxml.etree import _Element
 
 from erpbrasil.assinatura.assinatura import Assinatura
 
+from .ambiente import em_producao, normalizar_ambiente
 from .resposta import analisar_retorno_raw
 
 # Fix Python 2.x.
@@ -37,6 +38,19 @@ class DocumentoEletronico(ABC):
     def __init__(self, transmissao, envio_sincrono=False):
         self._transmissao = transmissao
         self.envio_sincrono = bool(envio_sincrono)
+
+    @property
+    def ambiente(self):
+        """Ambiente como texto do tpAmb: "1" (produção) ou "2" (homologação)."""
+        return self._ambiente
+
+    @ambiente.setter
+    def ambiente(self, valor):
+        self._ambiente = normalizar_ambiente(valor)
+
+    @property
+    def em_producao(self):
+        return em_producao(self._ambiente)
 
     def _generateds_to_string_etree(self, ds, pretty_print=False):
         if type(ds) == _Element:

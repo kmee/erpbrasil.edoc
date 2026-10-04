@@ -4,6 +4,7 @@ from contextlib import suppress
 
 from lxml import etree
 
+from erpbrasil.edoc.ambiente import em_producao
 from erpbrasil.edoc.edoc import DocumentoEletronico
 from erpbrasil.transmissao import TransmissaoSOAP
 
@@ -246,8 +247,7 @@ def get_service_url(sigla_estado, service, ambiente):
             f"Estado {sigla_estado} não suportado ou configuração ausente."
         )
 
-    # ambiente chega como int (1) ou texto ("1", como o tpAmb do XML)
-    environment = AMBIENTE_PRODUCAO if str(ambiente) == "1" else AMBIENTE_HOMOLOGACAO
+    environment = AMBIENTE_PRODUCAO if em_producao(ambiente) else AMBIENTE_HOMOLOGACAO
     if service == "QRCode":
         return state_config[environment][QR_CODE_URL]
 
@@ -267,7 +267,7 @@ class CTe(DocumentoEletronico):
     def __init__(self, transmissao, uf, versao="4.00", ambiente="1", mod="57"):
         super().__init__(transmissao)
         self.versao = str(versao)
-        self.ambiente = str(ambiente)
+        self.ambiente = ambiente
         self.uf = int(uf)
         self.mod = str(mod)
 

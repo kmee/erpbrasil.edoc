@@ -112,9 +112,7 @@ class MDe(NFe):
 
         return self._post(
             xml_envio_etree,
-            localizar_url(
-                WS_NFE_RECEPCAO_EVENTO, str(91), self.mod, int(self.ambiente)
-            ),
+            localizar_url(WS_NFE_RECEPCAO_EVENTO, str(91), self.mod, self.ambiente),
             "nfeRecepcaoEventoNF",
             retEnvConfRecebto,
         )

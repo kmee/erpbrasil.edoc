@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 from erpbrasil.base import misc
+from erpbrasil.edoc.ambiente import em_producao
 from erpbrasil.edoc.nfse import NFSe, ServicoNFSe
 
 try:
@@ -61,7 +62,7 @@ class Issnet(NFSe):
     def __init__(
         self, transmissao, ambiente, cidade_ibge, cnpj_prestador, im_prestador
     ):
-        if ambiente == "2":
+        if not em_producao(ambiente):
             self._url = "https://www.issnetonline.com.br/webserviceabrasf/homologacao/"
         else:
             self._url = (
@@ -152,7 +153,7 @@ class Issnet(NFSe):
                     Numero=doc_numero,
                     Cnpj=self.cnpj_prestador,
                     InscricaoMunicipal=self.im_prestador,
-                    CodigoMunicipio=self.cidade if self.ambiente == "1" else 999,
+                    CodigoMunicipio=self.cidade if self.em_producao else 999,
                 ),
                 CodigoCancelamento="0001",
             )

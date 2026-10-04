@@ -1,6 +1,7 @@
 # Copyright (C) 2019  Luis Felipe Mileo - KMEE
 
 
+from erpbrasil.edoc.ambiente import em_producao
 from erpbrasil.edoc.chave import ChaveNFSeDSF
 from erpbrasil.edoc.nfse import NFSe, ServicoNFSe
 
@@ -60,7 +61,7 @@ class Dsf(NFSe):
         # Não tem URL de homologação mas tem métodos para testes
         # no mesmo webservice
 
-        if ambiente == "2":
+        if not em_producao(ambiente):
             self._servicos = servicos_hml
         else:
             self._servicos = servicos_hml

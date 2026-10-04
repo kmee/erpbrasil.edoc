@@ -8,6 +8,7 @@ from contextlib import suppress
 
 from lxml import etree
 
+from erpbrasil.edoc.ambiente import em_producao
 from erpbrasil.edoc.edoc import DocumentoEletronico
 
 with suppress(ImportError):
@@ -670,6 +671,9 @@ def localizar_url(servico, estado, mod="55", ambiente=2, contingencia=False):
     if servico in (WS_DFE_DISTRIBUICAO, WS_DOWNLOAD_NFE):
         ws = AN
 
+    # os dicionários de URLs usam as chaves inteiras 1 e 2
+    ambiente = AMBIENTE_PRODUCAO if em_producao(ambiente) else AMBIENTE_HOMOLOGACAO
+
     if mod in ws:
         dominio = ws[mod][ambiente]["servidor"]
         complemento = ws[mod][ambiente][servico]
@@ -723,7 +727,7 @@ class NFe(DocumentoEletronico):
     ):
         super().__init__(transmissao, envio_sincrono)
         self.versao = str(versao)
-        self.ambiente = str(ambiente)
+        self.ambiente = ambiente
         self.uf = int(uf)
         self.mod = str(mod)
         self.contingencia = contingencia
@@ -745,7 +749,7 @@ class NFe(DocumentoEletronico):
             service,
             str(self.uf),
             self.mod,
-            int(self.ambiente),
+            self.ambiente,
             self.contingencia,
         )
         return endpoint

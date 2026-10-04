@@ -341,9 +341,7 @@ class NFCe(NFe):
 
         return self._post(
             xml_envio_etree,
-            localizar_url(
-                WS_NFE_AUTORIZACAO, str(self.uf), self.mod, int(self.ambiente)
-            ),
+            localizar_url(WS_NFE_AUTORIZACAO, str(self.uf), self.mod, self.ambiente),
             "nfeAutorizacaoLote",
             retEnviNFe,
         )
