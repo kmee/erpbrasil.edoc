@@ -409,7 +409,10 @@ class Giss:
         declaracao = next(iter(_todos(origem, "InfDeclaracaoPrestacaoServico")), None)
         if declaracao is None or not declaracao.get("Id"):
             raise ValueError("RPS sem InfDeclaracaoPrestacaoServico com Id")
-        raiz, ns = self._raiz("substituir-nfse-envio", "SubstituirNfseEnvio")
+        # o XSD do GissOnline (substituir-nfse-envio-v2_04.xsd) declara o
+        # SubstituirNfseEnvio no namespace do gerar-nfse-resposta: no do
+        # substituir-nfse-envio o webservice responde E160 (cvc-elt.1.a)
+        raiz, ns = self._raiz("gerar-nfse-resposta", "SubstituirNfseEnvio")
         substituicao = etree.SubElement(raiz, f"{{{ns}}}SubstituicaoNfse", Id=f"substituicao{int(numero_nfse)}")
         self._pedido_cancelamento(substituicao, ns, numero_nfse, codigo_cancelamento)
         rps = etree.SubElement(substituicao, f"{{{ns}}}Rps")

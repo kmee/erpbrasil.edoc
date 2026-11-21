@@ -136,7 +136,7 @@ def comp_nfse(numero, rps, extra=""):
 
 RESPOSTA_SUBSTITUIDA = soap(
     "SubstituirNfse",
-    f'<SubstituirNfseResposta xmlns="{NS_GISS.format("substituir-nfse-resposta")}"'
+    f'<SubstituirNfseResposta xmlns="{NS_GISS.format("gerar-nfse-resposta")}"'
     f' xmlns:t="{NS_TIPOS}"><RetSubstituicao><NfseSubstituida>'
     + comp_nfse(
         55,
@@ -407,7 +407,8 @@ class TestGiss(TestCase):
         retorno = self.giss(RESPOSTA_SUBSTITUIDA).substituir_nfse(55, lote((2,)), "1")
         self.assertEqual(self.session.chamadas[0]["headers"]["SOAPAction"], f"{NS_SERVICO}/SubstituirNfse")
         dados = dados_da_chamada(self.session.chamadas[0])
-        ns = NS_GISS.format("substituir-nfse-envio")
+        # o XSD do GissOnline põe o SubstituirNfseEnvio no namespace do gerar-nfse-resposta
+        ns = NS_GISS.format("gerar-nfse-resposta")
         self.assertEqual(dados.tag, f"{{{ns}}}SubstituirNfseEnvio")
         substituicao = dados.find(f"{{{ns}}}SubstituicaoNfse")
         self.assertEqual(substituicao.get("Id"), "substituicao55")
